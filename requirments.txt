@@ -1,0 +1,8 @@
+groq
+elevenlabs
+python-dotenv
+sounddevice
+scipy
+numpy
+pvporcupine
+pyaudio

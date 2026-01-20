@@ -1,8 +1,11 @@
 groq
-elevenlabs
+pypdf
 python-dotenv
 sounddevice
 scipy
 numpy
 pvporcupine
 pyaudio
+pygame
+edge-tts
+aiofiles

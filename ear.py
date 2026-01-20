@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Setup Clients
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 porcupine_key = os.getenv("PICOVOICE_ACCESS_KEY")
 
@@ -35,7 +34,7 @@ def wait_for_wake_word():
 
             if keyword_index >= 0:
                 print(" Wake Word Detected!")
-                audio_stream.close() # Close stream to free up mic
+                audio_stream.close()
                 pa.terminate()
                 porcupine.delete()
                 return True
@@ -45,16 +44,15 @@ def wait_for_wake_word():
 
 def listen_and_transcribe():
     """Records audio and sends it to Groq Whisper."""
-    fs = 44100  # Sample rate
-    seconds = 5 # Duration to listen after waking up
+    fs = 44100
+    seconds = 5
     filename = "input.wav"
 
     print("🎤 Listening...")
     my_recording = sd.rec(int(seconds * fs), samplerate=fs, channels=1)
-    sd.wait()  # Wait until finished
+    sd.wait()
     write(filename, fs, my_recording)
     
-    # Send to Groq
     with open(filename, "rb") as file:
         try:
             transcription = client.audio.transcriptions.create(
@@ -67,6 +65,15 @@ def listen_and_transcribe():
             print(f"Transcription Error: {e}")
             return None
         
-w=wait_for_wake_word()
-while w:
-    listen_and_transcribe()
+if __name__ == "__main__":
+    print("--- 🤖 System Starting ---")
+    
+    while True:
+        if wait_for_wake_word():
+            
+            user_text = listen_and_transcribe()
+            
+            if user_text:
+                print(f"👂 You said: {user_text}")
+            
+            print("💤 Going back to sleep...")
